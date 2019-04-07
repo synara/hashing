@@ -2,7 +2,13 @@ from hashing import HashingTable
 from user import User
 
 if __name__ == '__main__':
-    generates = False
+
+    user = User("Suelly", 1.63)
+    hashtable = HashingTable(5)
+    hashtable.put(user.name, user)
+
+
+    """generates = False
     print("---------- MENU ----------")
     print("1. generate data \n2. find user")  
     option = int(input("choose one of the options: "))
@@ -21,8 +27,9 @@ if __name__ == '__main__':
             key = input("enter the user name: ")
             hashtable.get(key)
         else: 
-            print("there's not users on the base. firstly, generate data.")
-
+            print("there's not users on the base. firstly, generate data.")"""
+            
+ 
 
       
 

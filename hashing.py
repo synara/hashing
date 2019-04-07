@@ -3,59 +3,65 @@ from user import User
 class HashingTable(object):
     def __init__(self, tablesize):
         self.tablesize = tablesize
-        self.slots = [None] * self.tablesize
-        self.buckets = [None] * self.tablesize
+        self.slots = [[User]] * self.tablesize
 
     def hash(self, astring):
         sum = 0
         for pos in range(len(astring)):
-            sum += ord(astring[pos]) * pos
+            sum += ord(astring[pos])
             
         return sum % self.tablesize
 
     def put(self, key, user):
         hashindex = self.hash(key)
-        
-        if self.slots[hashindex] == None:
-            self.slots[hashindex] = key
-            self.buckets[hashindex] = user
-        else:  
-            if self.slots[hashindex] != key: 
-                newhashindex = self.chaining(hashindex, len(self.slots))
+
+        if self.slots[hashindex] == [User]:
+            self.slots[hashindex] = []
+            self.slots[hashindex].append(user)
+        else: 
+            indexvalues = len(self.slots[hashindex])
+
+            for i in range(indexvalues):
+                name = self.slots[hashindex][i].name
+                if self.slots[hashindex][i].name != key: 
+                    newhashindex = self.chaining(hashindex)
                
-               #esse while procura um novo hash index enquanto ele for igual a chave ou o slot nao estiver vazio
-                while self.slots[newhashindex] != None and self.slots[newhashindex] != key:
-                    newhashindex = self.nexthash(chaining,len(self.slots))
+                    #esse while procura um novo hash index enquanto ele for igual a chave ou o slot nao estiver vazio
+                    while self.slots[newhashindex] != [User] and self.slots[newhashindex][i].name != key:
+                        newhashindex = self.chaining(newhashindex)
                
-                if self.slots[newhashindex] == None:
-                    self.slots[newhashindex] = key
-                    self.buckets[newhashindex] = user
+                    if self.slots[newhashindex] == [User]:
+                        self.slots[newhashindex] = []
+                        self.slots[newhashindex].append(user)
+                    else:
+                        self.slots[newhashindex] = user #substitui
                 else:
-                    self.buckets[newhashindex] = buckets #replace
-            else:
-                self.buckets[hashindex] = user        
+                    self.slots[hashindex][i] = user 
+                   
             
     def chaining(self, oldhash):
         #reprogramar usando a tecnica de chaining (esqueci como que eh rs)
         return ( oldhash + 1 ) % self.tablesize
 
     def contains(self, name):
-        return self.search(self.buckets[self.tablesize], name) != None
+        return self.search(self.slots[self.hash(name)], name) != None
         
-    def search(self, buckets, key):
+    def search(self, values, key):
         index = None
-        for i in range(len(buckets)):
-            if buckets[i].name == key:
+        for i in range(len(values)):
+            if values[i].name == key:
                 index = i
         return index
 
     def get(self, key):
         exists = self.contains(key)
-        
+
         if exists:
-            index = self.hash(key)
-            name = self.buckets[index].name
-            height = str(self.buckets[index].height)
+            slot = self.hash(key)
+            index = self.search(self.slots[slot], key)
+
+            name = self.slots[slot][index].name
+            height = str(self.slots[slot][index].height)
             print(f"----- user ----- \n  name: {name} \n  height: {height}")
         else:
             print("the informed user doesn't exist in the database.")
@@ -63,3 +69,20 @@ class HashingTable(object):
     
     def generatedata():
         pass
+
+if __name__ == '__main__':
+
+    user = User("Synara", 1.63)
+    hashtable = HashingTable(5)
+    hashtable.put(user.name, user)
+    
+    user = User("Suelly", 1.63)
+    hashtable.put(user.name, user)
+
+    user = User("Suelyl", 1.63)
+    hashtable.put(user.name, user)
+
+    user = User("Suelly", 1.63)
+    hashtable.put(user.name, user)
+
+    hashtable.get("Suelyl")
