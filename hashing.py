@@ -1,14 +1,17 @@
 from user import User
+import random
+import string
+import sys
 
 class HashingTable(object):
     def __init__(self, tablesize):
         self.tablesize = tablesize
         self.slots = [[User]] * self.tablesize
 
-    def hash(self, astring):
+    def hash(self, key):
         sum = 0
-        for pos in range(len(astring)):
-            sum += ord(astring[pos])
+        for pos in range(len(key)):
+            sum += ord(key[pos]) * pos
             
         return sum % self.tablesize
 
@@ -27,21 +30,23 @@ class HashingTable(object):
                     newhashindex = self.chaining(hashindex)
                
                     #esse while procura um novo hash index enquanto ele for igual a chave ou o slot nao estiver vazio
+                    #gera um loop - perguntar ao professor
                     while self.slots[newhashindex] != [User] and self.slots[newhashindex][i].name != key:
                         newhashindex = self.chaining(newhashindex)
-               
+
                     if self.slots[newhashindex] == [User]:
                         self.slots[newhashindex] = []
                         self.slots[newhashindex].append(user)
                     else:
-                        self.slots[newhashindex] = user #substitui
+                        self.slots[newhashindex].append(user)
                 else:
-                    self.slots[hashindex][i] = user 
+                    self.slots[hashindex] = user 
                    
             
-    def chaining(self, oldhash):
+    def chaining(self, currentindex):
         #reprogramar usando a tecnica de chaining (esqueci como que eh rs)
-        return ( oldhash + 1 ) % self.tablesize
+        newindex = currentindex + 1    
+        return newindex if (newindex <= (self.tablesize - 1)) else (newindex % self.tablesize)
 
     def contains(self, name):
         return self.search(self.slots[self.hash(name)], name) != None
@@ -52,6 +57,14 @@ class HashingTable(object):
             if values[i].name == key:
                 index = i
         return index
+
+    def showusers(self):
+        for i in range(self.tablesize):
+            if self.slots[i] != [User]:
+                print(f"key: {i}")
+                for j in range(len(self.slots[i])):
+                    print(f"  name: {self.slots[i][j].name} \n  height: {self.slots[i][j].height}\n")
+
 
     def get(self, key):
         exists = self.contains(key)
@@ -67,22 +80,18 @@ class HashingTable(object):
             print("the informed user doesn't exist in the database.")
 
     
-    def generatedata():
-        pass
-
-if __name__ == '__main__':
-
-    user = User("Synara", 1.63)
-    hashtable = HashingTable(5)
-    hashtable.put(user.name, user)
-    
-    user = User("Suelly", 1.63)
-    hashtable.put(user.name, user)
-
-    user = User("Suelyl", 1.63)
-    hashtable.put(user.name, user)
-
-    user = User("Suelly", 1.63)
-    hashtable.put(user.name, user)
-
-    hashtable.get("Suelyl")
+    def generatedata(self):
+        vowels = "aeiou"
+        consonants = "".join(set(string.ascii_lowercase) - set(vowels))
+        
+        for i in range(self.tablesize):
+            namesize = random.randint(3, 18)
+            name = ""
+            for n in range(namesize):
+                if n % 2 == 0:
+                    name += random.choice(consonants)
+                else:
+                    name += random.choice(vowels)
+                
+            user = User(name, round(random.uniform(1,2),2))
+            self.put(name, user)
