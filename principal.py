@@ -15,12 +15,13 @@ if __name__ == '__main__':
     
     generates = False
     option = menu()
-    tablesize = 15
+    tablesize = 0
     hashtable = HashingTable(tablesize)
 
     if option == 1: 
-        usersCount = int(input("how many users should be created? "))
-        hashtable.generatedata(usersCount)
+        tablesize = int(input("how many users should be created? "))
+        hashtable = HashingTable(tablesize)
+        hashtable.generatedata()
         generates = True
     
     elif  option == 2:

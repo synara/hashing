@@ -24,13 +24,14 @@ class HashingTable(object):
         else: 
             indexvalues = len(self.slots[hashindex])
 
+            #refatorar depois usando o search/contains
             for i in range(indexvalues):
                 name = self.slots[hashindex][i].name
                 if self.slots[hashindex][i].name != key: 
                     newhashindex = self.chaining(hashindex)
                
                     #esse while procura um novo hash index enquanto ele for igual a chave ou o slot nao estiver vazio
-                    #gera um loop - perguntar ao professor
+                    #gera um loop quando tento inserir um numero de usuarios maior que o tanto de slots - perguntar ao professor
                     while self.slots[newhashindex] != [User] and self.slots[newhashindex][i].name != key:
                         newhashindex = self.chaining(newhashindex)
 
@@ -80,11 +81,11 @@ class HashingTable(object):
             print("the informed user doesn't exist in the database.")
 
     
-    def generatedata(self, count):
+    def generatedata(self):
         vowels = "aeiou"
         consonants = "".join(set(string.ascii_lowercase) - set(vowels))
         
-        for i in range(count):
+        for i in range(self.tablesize):
             namesize = random.randint(3, 18)
             name = ""
             for n in range(namesize):
@@ -94,4 +95,4 @@ class HashingTable(object):
                     name += random.choice(vowels)
                 
             user = User(name, round(random.uniform(1,2),2))
-            self.put(name, user)
+            self.put(name, user) 
