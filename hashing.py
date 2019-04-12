@@ -80,11 +80,11 @@ class HashingTable(object):
             print("the informed user doesn't exist in the database.")
 
     
-    def generatedata(self):
+    def generatedata(self, count):
         vowels = "aeiou"
         consonants = "".join(set(string.ascii_lowercase) - set(vowels))
         
-        for i in range(self.tablesize):
+        for i in range(count):
             namesize = random.randint(3, 18)
             name = ""
             for n in range(namesize):

@@ -15,13 +15,12 @@ if __name__ == '__main__':
     
     generates = False
     option = menu()
-    tablesize = 0
+    tablesize = 15
     hashtable = HashingTable(tablesize)
 
     if option == 1: 
-        tablesize = int(input("how many users should be created? "))
-        hashtable = HashingTable(tablesize)
-        hashtable.generatedata()
+        usersCount = int(input("how many users should be created? "))
+        hashtable.generatedata(usersCount)
         generates = True
     
     elif  option == 2:
@@ -84,5 +83,3 @@ if __name__ == '__main__':
                     alert()
         else:
             exit()
-
- 
